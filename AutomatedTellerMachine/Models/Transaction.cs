@@ -9,6 +9,7 @@ namespace AutomatedTellerMachine.Models
     public class Transaction
     {
         public int Id { get; set; }
+      
 
         [Required]
         [DataType(DataType.Currency)]
@@ -17,6 +18,6 @@ namespace AutomatedTellerMachine.Models
         [Required]
         public int CheckingAccountId { get; set; }
         public virtual CheckingAccount CheckingAccount { get; set; }
-      
+        
     }
 }

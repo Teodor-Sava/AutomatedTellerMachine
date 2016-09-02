@@ -36,8 +36,8 @@ namespace AutomatedTellerMachine.Models
             public IDbSet<CheckingAccount> Checking { get; set; }
 
             public IDbSet<Transaction> Transactions { get; set; }
-            
-    }
+
+          }
 
     public class  FakeApplicationDbContext : IApplicationDbContext
     {

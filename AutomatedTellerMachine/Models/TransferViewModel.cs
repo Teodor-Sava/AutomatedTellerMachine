@@ -13,11 +13,13 @@ namespace AutomatedTellerMachine.Models
         public decimal Amount { get; set; }
 
         [Required]
-        public int CheckingAccoutId { get; set; }
-        
-        [Required]
-        [Display(Name="To Account #")]
-        public string DestinationCheckingAccountNumber { get; set; }
+        public int CheckingAccountId { get; set; }
 
+        [Required]
+        [Display(Name = "To Account #")]
+        public long DestinationCheckingAccountNumber { get; set; }
+
+        [Display(Name = "Transaction Message")]
+        public string Message { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using AutomatedTellerMachine.Helpers;
 using AutomatedTellerMachine.Models;
 using Microsoft.AspNet.Identity;
 
@@ -36,10 +37,10 @@ namespace AutomatedTellerMachine.Controllers
     {
         return View(db.Checking.ToList());
     }
-
-    public ActionResult Statement(int id)
+        [HttpGet]
+    public ActionResult Statement(int checkingAccountId)
     {
-        var checkingAccount = db.Checking.Find(id);
+        var checkingAccount = db.Checking.Find(checkingAccountId);
         return View(checkingAccount.Transactions.ToList());
     }
         // GET: CheckingAccount/Create
@@ -50,10 +51,11 @@ namespace AutomatedTellerMachine.Controllers
 
         // POST: CheckingAccount/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(CheckingAccount account)
         {
             try
             {
+               
                 // TODO: Add insert logic here
 
                 return RedirectToAction("Index");

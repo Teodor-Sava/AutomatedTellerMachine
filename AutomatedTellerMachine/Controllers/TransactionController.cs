@@ -43,8 +43,24 @@ namespace AutomatedTellerMachine.Controllers
             }
             else return View();
         }
+        public ActionResult QuickCash(int checkingAccountId, decimal amount)
+        {
+            var sourceCheckingAccount = db.Checking.Find(checkingAccountId);
+            var balance = sourceCheckingAccount.Balance;
+            if (balance < amount)
+            {
+                return View("");
+            }
+            db.Transactions.Add(new Transaction { CheckingAccountId = checkingAccountId, Amount = -amount });
+            db.SaveChanges();
+
+            var service = new CheckingAccountService(db);
+            service.UpdateBalance(checkingAccountId);
+
+            return RedirectToAction("Index", "Home");
+        }
         //Get: Transaction/Withdrawl
-        public ActionResult Withdrawl(int checkingAcoountId)
+        public ActionResult Withdrawl(int checkingAccountId)
         {
             return View();
         }
@@ -75,37 +91,33 @@ namespace AutomatedTellerMachine.Controllers
         [HttpPost]
         public ActionResult Transfer(TransferViewModel transfer)
         {
-            var sourceCheckingAccount = db.Checking.Find(transfer.CheckingAccoutId);
+            var sourceCheckingAccount = db.Checking.Find(transfer.CheckingAccountId);
             if (sourceCheckingAccount.Balance < transfer.Amount)
             {
-                ModelState.AddModelError("Amount","You have insufficient funds !");
+                ModelState.AddModelError("Amount", "You have insufficient funds!");
             }
-            var destinationCheckingAccount =
-                db.Checking.Where(c => c.AccountNumber == transfer.DestinationCheckingAccountNumber).FirstOrDefault();
+
+            // check for a valid destination account
+            var destinationCheckingAccount = db.Checking.Where(c => c.AccountNumber == transfer.DestinationCheckingAccountNumber).FirstOrDefault();
             if (destinationCheckingAccount == null)
             {
-                ModelState.AddModelError("DetinationCheckingAccountNumber","Invalid account number");
-
+                ModelState.AddModelError("DestinationCheckingAccountNumber", "Invalid destination account number.");
             }
+
+            // add debit/credit transactions and update account balances
             if (ModelState.IsValid)
             {
-                db.Transactions.Add(new Transaction
-                {
-                    CheckingAccountId = transfer.CheckingAccoutId,
-                    Amount = -transfer.Amount
-                });
-                db.Transactions.Add(new Transaction
-                {
-                    CheckingAccountId = destinationCheckingAccount.Id,
-                    Amount = transfer.Amount
-                });
+                db.Transactions.Add(new Transaction { CheckingAccountId = transfer.CheckingAccountId, Amount = -transfer.Amount });
+                db.Transactions.Add(new Transaction { CheckingAccountId = destinationCheckingAccount.Id, Amount = transfer.Amount });
                 db.SaveChanges();
+
                 var service = new CheckingAccountService(db);
-                service.UpdateBalance(transfer.CheckingAccoutId);
+                service.UpdateBalance(transfer.CheckingAccountId);
                 service.UpdateBalance(destinationCheckingAccount.Id);
-                return PartialView("_TransferSuccess", transfer); 
+
+                return PartialView("_TransferSuccess", transfer);
             }
-            return PartialView("_TranserForm");
+            return PartialView("_TransferForm");
         }
     }
 }

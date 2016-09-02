@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using AutomatedTellerMachine.Helpers;
 using AutomatedTellerMachine.Models;
+using Microsoft.Ajax.Utilities;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
 
 namespace AutomatedTellerMachine.Services
 {
@@ -16,18 +20,33 @@ namespace AutomatedTellerMachine.Services
         }
 
         public void CreateCheckingAccount(string firstName, string lastName, string userId, decimal initialBalance)
-        {
-            var accountNumber = (123456 + db.Checking.Count()).ToString().PadLeft(10, '0');
+        {   
+            Random random = new Random();
+            Random random2 = new Random();
+            long accountNumber = random.Next(10000)+random2.Next(10000,1000000);
+            
             var checkingAccount = new CheckingAccount
-            {
+            {   
                 FirstName = firstName,
                 LastName = lastName,
-                AccountNumber = accountNumber ,
                 Balance = initialBalance,
-                AplicationUserId = userId
+                AplicationUserId = userId,
+                AccountNumber = accountNumber
             };
             db.Checking.Add(checkingAccount);
-            db.SaveChanges();
+            try { db.SaveChanges();}
+            catch (DbEntityValidationException dbEx)
+            {
+                foreach (var validationErrors in dbEx.EntityValidationErrors)
+                {
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        Trace.TraceInformation("Property: {0} Error: {1}",
+                                                validationError.PropertyName,
+                                                validationError.ErrorMessage);
+                    }
+                }
+            }
         }
 
         public void UpdateBalance(int checkingAccountId)

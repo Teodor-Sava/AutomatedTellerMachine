@@ -204,6 +204,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\AccountGenerator.cs" />
     <Compile Include="Migrations\201608131957546_InitialCreate.cs" />
     <Compile Include="Migrations\201608131957546_InitialCreate.Designer.cs">
       <DependentUpon>201608131957546_InitialCreate.cs</DependentUpon>
@@ -313,10 +314,10 @@
     <Content Include="Views\Home\_ContactThanks.cshtml" />
     <Content Include="Views\CheckingAccount\Statement.cshtml" />
     <Content Include="Views\Transaction\Withdrawl.cshtml" />
-    <Content Include="Views\Transaction\_TranserForm.cshtml" />
     <Content Include="Views\Transaction\_TransferSuccess.cshtml" />
     <Content Include="Views\Transaction\Transfer.cshtml" />
     <Content Include="Views\Transaction\_TransferForm.cshtml" />
+    <Content Include="Views\Transaction\QuickCash.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
