@@ -19,7 +19,6 @@ namespace AutomatedTellerMachine.Models
         [Display(Name = "To Account #")]
         public long DestinationCheckingAccountNumber { get; set; }
 
-        [Display(Name = "Transaction Message")]
-        public string Message { get; set; }
+        
     }
 }

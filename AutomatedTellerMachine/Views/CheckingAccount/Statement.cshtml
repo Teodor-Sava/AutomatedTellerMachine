@@ -14,11 +14,17 @@
         <td><strong>Amount</strong></td>
     </tr>
     </thead>
-    <tbody data-bind="foreach : currentTransactions">
-    <tr>
-        <td data-bind="text:Id"></td>
-        <td data-bind="text:formattedPrice(Amount)"></td>
-    </tr>
+    <tbody>
+    @{
+        foreach (var transaction in Model)
+        {
+            <tr>
+                <td>@transaction.Id</td>
+                <td >@transaction.Amount</td>
+            </tr>
+        }
+    }
+    
     </tbody>
     <tfoot>
     <tr>
