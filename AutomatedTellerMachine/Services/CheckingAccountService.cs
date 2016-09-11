@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using AutomatedTellerMachine.Helpers;
 using AutomatedTellerMachine.Models;
 using Microsoft.Ajax.Utilities;
 using System.Data.Entity.Validation;

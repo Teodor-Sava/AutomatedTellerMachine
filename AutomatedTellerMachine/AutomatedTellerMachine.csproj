@@ -204,7 +204,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\AccountGenerator.cs" />
     <Compile Include="Migrations\201608131957546_InitialCreate.cs" />
     <Compile Include="Migrations\201608131957546_InitialCreate.Designer.cs">
       <DependentUpon>201608131957546_InitialCreate.cs</DependentUpon>
@@ -280,12 +279,12 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
@@ -311,7 +310,6 @@
     <Content Include="Views\CheckingAccount\Create.cshtml" />
     <Content Include="Views\Transaction\Deposit.cshtml" />
     <Content Include="Views\CheckingAccount\List.cshtml" />
-    <Content Include="Views\Home\_ContactThanks.cshtml" />
     <Content Include="Views\CheckingAccount\Statement.cshtml" />
     <Content Include="Views\Transaction\Withdrawl.cshtml" />
     <Content Include="Views\Transaction\_TransferSuccess.cshtml" />

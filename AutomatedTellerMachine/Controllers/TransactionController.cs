@@ -31,17 +31,22 @@ namespace AutomatedTellerMachine.Controllers
         }
 
         [HttpPost]
-        public ActionResult Deposit(Transaction transaction)
+        public ActionResult  Deposit(Transaction transaction)
         {
             if (ModelState.IsValid)
             {
-                db.Transactions.Add(transaction);
-                db.SaveChanges();
-                var service = new CheckingAccountService(db);
-                service.UpdateBalance(transaction.CheckingAccountId);
+              DepositAmount(transaction);
                 return RedirectToAction("Index", "Home");
             }
             else return View();
+        }
+
+        public void DepositAmount(Transaction transaction)
+        {
+            db.Transactions.Add(transaction);
+            db.SaveChanges();
+            var service = new CheckingAccountService(db);
+            service.UpdateBalance(transaction.CheckingAccountId);
         }
         public ActionResult QuickCash(int checkingAccountId, decimal amount)
         {
@@ -91,14 +96,14 @@ namespace AutomatedTellerMachine.Controllers
         [HttpPost]
         public ActionResult Transfer(TransferViewModel transfer)
         {
-            var sourceCheckingAccount = db.Checking.Find(transfer.CheckingAccountId);
+            var sourceCheckingAccount = db.Checking.Find(transfer);
             if (sourceCheckingAccount.Balance < transfer.Amount)
             {
                 ModelState.AddModelError("Amount", "You have insufficient funds!");
             }
 
             // check for a valid destination account
-            var destinationCheckingAccount = db.Checking.Where(c => c.AccountNumber == transfer.DestinationCheckingAccountNumber).FirstOrDefault();
+            var destinationCheckingAccount = db.Checking.Where(c => c.Id == transfer.DestinationCheckingAccountNumber).FirstOrDefault();
             if (destinationCheckingAccount == null)
             {
                 ModelState.AddModelError("DestinationCheckingAccountNumber", "Invalid destination account number.");
@@ -107,8 +112,8 @@ namespace AutomatedTellerMachine.Controllers
             // add debit/credit transactions and update account balances
             if (ModelState.IsValid)
             {
-                db.Transactions.Add(new Transaction { CheckingAccountId = transfer.CheckingAccountId, Amount = -transfer.Amount});
-                db.Transactions.Add(new Transaction { CheckingAccountId = destinationCheckingAccount.Id, Amount = transfer.Amount});
+                db.Transactions.Add(new Transaction { CheckingAccountId = transfer.CheckingAccountId, Amount = -transfer.Amount , Message = transfer.Message});
+                db.Transactions.Add(new Transaction { CheckingAccountId = destinationCheckingAccount.Id, Amount = transfer.Amount, Message = transfer.Message});
               
                 db.SaveChanges();
 

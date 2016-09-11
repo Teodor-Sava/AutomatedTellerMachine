@@ -18,6 +18,7 @@ namespace AutomatedTellerMachine.Models
         [Required]
         public int CheckingAccountId { get; set; }
         public virtual CheckingAccount CheckingAccount { get; set; }
-                
+        
+        public string Message { get; set; }      
     }
 }
