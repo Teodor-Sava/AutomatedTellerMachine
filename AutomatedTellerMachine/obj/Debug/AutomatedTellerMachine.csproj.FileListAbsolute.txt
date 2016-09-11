@@ -51,6 +51,11 @@ C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\Automa
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.Owin.Security.MicrosoftAccount.dll
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.Owin.Security.OAuth.dll
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.Owin.Security.Twitter.dll
+C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.Practices.ServiceLocation.dll
+C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.Practices.Unity.Configuration.dll
+C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.Practices.Unity.dll
+C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.Practices.Unity.Mvc.dll
+C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.Practices.Unity.RegistrationByConvention.dll
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.Web.Infrastructure.dll
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Newtonsoft.Json.dll
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Owin.dll
@@ -61,6 +66,7 @@ C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\Automa
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\System.Web.WebPages.Deployment.dll
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\System.Web.WebPages.dll
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\System.Web.WebPages.Razor.dll
+C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\WebActivatorEx.dll
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\WebGrease.dll
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Antlr3.Runtime.pdb
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.AI.DependencyCollector.xml
@@ -69,6 +75,12 @@ C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\Automa
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.AI.WindowsServer.xml
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.ApplicationInsights.xml
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.Practices.ServiceLocation.pdb
+C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.Practices.ServiceLocation.xml
+C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.Practices.Unity.xml
+C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.Practices.Unity.Configuration.xml
+C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.Practices.Unity.Mvc.xml
+C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Microsoft.Practices.Unity.RegistrationByConvention.xml
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\Newtonsoft.Json.xml
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\System.Web.Helpers.xml
 C:\Users\Teo\documents\visual studio 2015\Projects\AutomatedTellerMachine\AutomatedTellerMachine\bin\System.Web.Mvc.xml

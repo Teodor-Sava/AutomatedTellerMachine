@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace AutomatedTellerMachine.Models
 {
@@ -19,6 +15,8 @@ namespace AutomatedTellerMachine.Models
         public int CheckingAccountId { get; set; }
         public virtual CheckingAccount CheckingAccount { get; set; }
         
-        public string Message { get; set; }      
+        public string Message { get; set; }
+
+        
     }
 }

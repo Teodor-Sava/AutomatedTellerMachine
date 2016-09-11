@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
-using System.Linq;
-using System.Web;
 
 namespace AutomatedTellerMachine.Models
 {
     public class CheckingAccount
-    {  
+    {
+        [Required]
         public int Id { get; set; }
-       
+
         [Display(Name = "Account #")]
         public long AccountNumber { get; set; }
 
@@ -22,16 +18,17 @@ namespace AutomatedTellerMachine.Models
         [Required]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
-        [Required]
+
         public string Name
         {
-            get { return String.Format("{0} {1}", this.FirstName, this.LastName); }
+            get { return string.Format("{0} {1}", FirstName, LastName); }
         }
+
         [DataType(DataType.Currency)]
         public decimal Balance { get; set; }
 
         public virtual ApplicationUser User { get; set; }
-      
+
 
         [Required]
         public string AplicationUserId { get; set; }

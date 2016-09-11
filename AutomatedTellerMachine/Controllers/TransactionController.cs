@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using AutomatedTellerMachine.Models;
-using AutomatedTellerMachine.Services;
+using AutomatedTellerMachine.Repositories;
 
 namespace AutomatedTellerMachine.Controllers
 {
@@ -12,17 +9,14 @@ namespace AutomatedTellerMachine.Controllers
     public class TransactionController : Controller
 
     {
-        private IApplicationDbContext db;
+        private readonly IRepository _repo;
 
-        public TransactionController()
+  
+        public TransactionController(IRepository repo)
         {
-            db = new ApplicationDbContext();
+            _repo = repo;
         }
 
-        public TransactionController(IApplicationDbContext dbContext)
-        {
-            db = dbContext;
-        }
 
         // GET: Transaction/Deposit
         public ActionResult Deposit(int checkingAccountId)
@@ -31,99 +25,161 @@ namespace AutomatedTellerMachine.Controllers
         }
 
         [HttpPost]
-        public ActionResult  Deposit(Transaction transaction)
+        public ActionResult Deposit(Transaction transaction)
         {
+            transaction.Message = "Deposit";
             if (ModelState.IsValid)
             {
-              DepositAmount(transaction);
-                return RedirectToAction("Index", "Home");
+                if (_repo.DepositAmount(transaction))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                var error = new TransactionError
+                {
+                    Title = "Transaction Denied",
+                    Message = "Could not deposit the amount"
+                };
+                return View("TransactionError", error);
+
             }
-            else return View();
+            return View();
         }
 
-        public void DepositAmount(Transaction transaction)
-        {
-            db.Transactions.Add(transaction);
-            db.SaveChanges();
-            var service = new CheckingAccountService(db);
-            service.UpdateBalance(transaction.CheckingAccountId);
-        }
+
         public ActionResult QuickCash(int checkingAccountId, decimal amount)
         {
-            var sourceCheckingAccount = db.Checking.Find(checkingAccountId);
-            var balance = sourceCheckingAccount.Balance;
-            if (balance < amount)
+            try
             {
-                return View("");
+                var balance = _repo.GetBalace(checkingAccountId);
+                if (balance < amount)
+                {
+                    var error = new TransactionError
+                    {
+                        Title = "Transaction Denied",
+                        Message = "You don't have the required amount in your account"
+                    };
+                    return View("TransactionError", error);
+                }
+
+                if (_repo.AddTransaction(checkingAccountId, -amount, "Quick cash"))
+                {
+                    return RedirectToAction("Statement", "CheckingAccount", new { checkingAccountId = checkingAccountId });
+                }
+                var error2 = new TransactionError
+                {
+                    Title = "Transaction Denied",
+                    Message = "Could not deposit the amount"
+                };
+                return View("TransactionError", error2);
             }
-            db.Transactions.Add(new Transaction { CheckingAccountId = checkingAccountId, Amount = -amount });
-            db.SaveChanges();
-
-            var service = new CheckingAccountService(db);
-            service.UpdateBalance(checkingAccountId);
-
-            return RedirectToAction("Index", "Home");
+            catch (Exception e)
+            {
+                var error2 = new TransactionError
+                {
+                    Title = "Transaction Denied",
+                    Message = e.Message
+                };
+                return View("TransactionError", error2);
+            }
+          
         }
+
         //Get: Transaction/Withdrawl
         public ActionResult Withdrawl(int checkingAccountId)
         {
             return View();
         }
+
         [HttpPost]
         public ActionResult Withdrawl(Transaction transaction)
         {
-            var checkingAccount = db.Checking.Find(transaction.CheckingAccountId);
-            if (checkingAccount.Balance < transaction.Amount)
+            try
             {
-                ModelState.AddModelError("Amount", "You have insuficient funds");
+                var balance = _repo.GetBalace(transaction.CheckingAccountId);
+                if (balance < transaction.Amount)
+                {
+                    ModelState.AddModelError("Amount", "You have insuficient funds");
+                }
+                if (ModelState.IsValid)
+                {
+                    if (_repo.AddTransaction(transaction.CheckingAccountId, -transaction.Amount, "Withdrawal"))
+                    {
+                        return RedirectToAction("Statement", "CheckingAccount", new { checkingAccountId = transaction.CheckingAccountId });
+                    }
+                    var error = new TransactionError
+                    {
+                        Title = "Transaction Denied",
+                        Message = "Could not withdraw"
+                    };
+                    return View("TransactionError", error);
+
+                }
+                ModelState.AddModelError("InvalidAccount", "Invalid account.");
+                return View();
             }
-            if (ModelState.IsValid)
+            catch (Exception e)
             {
-                transaction.Amount = -transaction.Amount;
-                db.Transactions.Add(transaction);
-                db.SaveChanges();
-                var service = new CheckingAccountService(db);
-                service.UpdateBalance(transaction.CheckingAccountId);
-                return RedirectToAction("Index", "Home");
+                var error2 = new TransactionError
+                {
+                    Title = "Transaction Denied",
+                    Message = e.Message
+                };
+                return View("TransactionError", error2);
             }
-            return View();
         }
 
         public ActionResult Transfer(int checkingAccountId)
         {
             return View();
         }
+
         [HttpPost]
         public ActionResult Transfer(TransferViewModel transfer)
         {
-            var sourceCheckingAccount = db.Checking.Find(transfer);
-            if (sourceCheckingAccount.Balance < transfer.Amount)
+            try
             {
-                ModelState.AddModelError("Amount", "You have insufficient funds!");
-            }
+                var balance = _repo.GetBalace(transfer.CheckingAccountId);
+                if (balance < transfer.Amount)
+                {
+                    ModelState.AddModelError("Amount", "You have insufficient funds!");
+                }
 
-            // check for a valid destination account
-            var destinationCheckingAccount = db.Checking.Where(c => c.Id == transfer.DestinationCheckingAccountNumber).FirstOrDefault();
-            if (destinationCheckingAccount == null)
+
+                // check for a valid destination account
+
+                if (!_repo.AccountExists(transfer.DestinationCheckingAccountId))
+                {
+                    ModelState.AddModelError("DestinationCheckingAccountId", "Invalid destination account number.");
+                }
+
+                // add debit/credit transactions and update account balances
+                if (ModelState.IsValid)
+                {
+                    if (_repo.Transfer(transfer.CheckingAccountId, transfer.DestinationCheckingAccountId, transfer.Amount,
+                            transfer.Message))
+                    {
+                        return PartialView("_TransferSuccess", transfer);
+                    }
+                    var error = new TransactionError
+                    {
+                        Title = "Transaction Denied",
+                        Message = "Could not transfer successfuly"
+                    };
+                    return View("TransactionError", error);
+
+                }
+                return PartialView("_TransferForm");
+            }
+            catch (Exception e)
             {
-                ModelState.AddModelError("DestinationCheckingAccountNumber", "Invalid destination account number.");
+
+                var error2 = new TransactionError
+                {
+                    Title = "Transaction Denied",
+                    Message = e.Message
+                };
+                return View("TransactionError", error2); 
             }
-
-            // add debit/credit transactions and update account balances
-            if (ModelState.IsValid)
-            {
-                db.Transactions.Add(new Transaction { CheckingAccountId = transfer.CheckingAccountId, Amount = -transfer.Amount , Message = transfer.Message});
-                db.Transactions.Add(new Transaction { CheckingAccountId = destinationCheckingAccount.Id, Amount = transfer.Amount, Message = transfer.Message});
-              
-                db.SaveChanges();
-
-                var service = new CheckingAccountService(db);
-                service.UpdateBalance(transfer.CheckingAccountId);
-                service.UpdateBalance(destinationCheckingAccount.Id);
-
-                return PartialView("_TransferSuccess", transfer);
-            }
-            return PartialView("_TransferForm");
         }
     }
 }

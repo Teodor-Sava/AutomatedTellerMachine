@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace AutomatedTellerMachine.Models
 {
@@ -17,7 +13,7 @@ namespace AutomatedTellerMachine.Models
 
         [Required]
         [Display(Name = "To Account #")]
-        public long DestinationCheckingAccountNumber { get; set; }
+        public int DestinationCheckingAccountId { get; set; }
 
         public string Message { get; set; }
 

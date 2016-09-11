@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -9,7 +7,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using AutomatedTellerMachine.Models;
-using AutomatedTellerMachine.Services;
+using AutomatedTellerMachine.Repositories;
+
 
 namespace AutomatedTellerMachine.Controllers
 {
@@ -18,13 +17,15 @@ namespace AutomatedTellerMachine.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
-        public AccountController()
+        private IRepository repo;
+        public AccountController(IRepository repository)
         {
+            repo = repository;
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IRepository repository)
         {
+            repo = repository;
             UserManager = userManager;
             SignInManager = signInManager;
         }
@@ -157,8 +158,7 @@ namespace AutomatedTellerMachine.Controllers
                 if (result.Succeeded)
                 {
                     UserManager.AddClaim(user.Id, new Claim(ClaimTypes.GivenName, model.FirstName));
-                    var service = new CheckingAccountService(HttpContext.GetOwinContext().Get<ApplicationDbContext>());
-                    service.CreateCheckingAccount(model.FirstName , model.LastName,user.Id,0);
+                   repo.CreateCheckingAccount(model.FirstName , model.LastName,user.Id,0);
 
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
@@ -379,8 +379,7 @@ namespace AutomatedTellerMachine.Controllers
                     result = await UserManager.AddLoginAsync(user.Id, info.Login);
                     if (result.Succeeded)
                     {
-                        var service = new CheckingAccountService(HttpContext.GetOwinContext().Get<ApplicationDbContext>());
-                        service.CreateCheckingAccount("Facebook","User", user.Id, 0);
+                      repo.CreateCheckingAccount("Facebook","User", user.Id, 0);
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                         return RedirectToLocal(returnUrl);
                     }
